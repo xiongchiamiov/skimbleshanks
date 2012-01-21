@@ -20,6 +20,7 @@
 				});
 				Crafty.scene('main', function() {
 					generateWorld();
+					placePlayer();
 				});
 				
 				Crafty.sprite(BLOCK_SIZE, 'media/images/sprite.png', {
@@ -37,6 +38,13 @@
 							             'z': 1});
 						}
 					}
+				}
+				
+				function placePlayer() {
+					Crafty.e('2D, DOM, blockBlue, LeftControls')
+					      .attr({'x': WIDTH-BLOCK_SIZE,
+					             'y': HEIGHT-BLOCK_SIZE,
+					             'z': 1});
 				}
 				
 				Crafty.scene('loading');
