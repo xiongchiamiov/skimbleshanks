@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<script src="crafty-0.4.4.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			window.onload = function() {
+				var WIDTH = 800;
+				var HEIGHT = 400;
+				var BLOCK_SIZE = 100;
+				Crafty.init(WIDTH, HEIGHT);
+				
+				Crafty.scene('loading', function() {
+					Crafty.background('#000');
+					Crafty.e("2D, DOM, Text")
+					      .attr({w: 100, h: 20, x: 150, y: 120})
+					      .text('Loading')
+					      .css({'text-align': 'center', 'color': 'white'});
+					Crafty.load(['media/images/sprite.png'], function() {
+						Crafty.scene('main');
+					});
+				});
+				Crafty.scene('main', function() {
+					generateWorld();
+				});
+				
+				Crafty.sprite(BLOCK_SIZE, 'media/images/sprite.png', {
+					'blockWhite': [0, 0],
+					'blockGrey': [1, 0],
+					'blockBlue': [2, 0]
+				});
+				
+				function generateWorld() {
+					for (var row = 0; row < HEIGHT/BLOCK_SIZE; row++) {
+						for (var col = 0; col < WIDTH/BLOCK_SIZE; col++) {
+							console.log('row: ' + row + ' col: ' + col);
+							Crafty.e('2D, DOM, blockWhite')
+							      .attr({'x': col*BLOCK_SIZE,
+							             'y': row*BLOCK_SIZE,
+							             'z': 1});
+						}
+					}
+				}
+				
+				Crafty.scene('loading');
+			};
+		</script>
+	</head>
+</html>
+
