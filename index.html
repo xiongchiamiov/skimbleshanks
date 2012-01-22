@@ -60,6 +60,18 @@
 					generatePlayer();
 					score = 0;
 				});
+				Crafty.scene('gameOver', function() {
+					console.log('game over');
+					Crafty.background('#000');
+					Crafty.e("2D, DOM, Text")
+					      .attr({w: 100, h: 20, x: 150, y: 120})
+					      .text('Game Over')
+					      .css({'text-align': 'center', 'color': 'white'});
+					Crafty.e("2D, DOM, Text")
+					      .attr({w: 100, h: 20, x: 150, y: 150})
+					      .text('Score: ' + score)
+					      .css({'text-align': 'center', 'color': 'white'});
+				});
 				
 				Crafty.sprite(BLOCK_SIZE, 'media/images/sprite.png', {
 					'blockWhite': [0, 0],
@@ -88,8 +100,12 @@
 				}
 				
 				function movePlayer(x, y) {
-					newX = player.x + (x * BLOCK_SIZE);
-					newY = player.y + (y * BLOCK_SIZE);
+					var newX = player.x + (x * BLOCK_SIZE);
+					var newY = player.y + (y * BLOCK_SIZE);
+					var currentRow = player.y / BLOCK_SIZE;
+					var currentCol = player.x / BLOCK_SIZE;
+					console.log('currentRow: ' + currentRow);
+					console.log('currentCol: ' + currentCol);
 					
 					// Check bounds
 					if (newX < 0 || newX+BLOCK_SIZE > WIDTH
@@ -97,12 +113,13 @@
 						console.log('Bounds hit');
 						return;
 					}
+					// Have we been here before?
+					if (grid[currentRow+y][currentCol+x].__coord[0] == 100) {
+						Crafty.scene('gameOver');
+						return;
+					}
 					
 					// Grey out current block
-					var currentRow = player.y / BLOCK_SIZE;
-					var currentCol = player.x / BLOCK_SIZE;
-					console.log('currentRow: ' + currentRow);
-					console.log('currentCol: ' + currentCol);
 					var currentBlock = grid[currentRow][currentCol];
 					currentBlock.__coord[0] = 100;
 					currentBlock.draw();
