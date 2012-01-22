@@ -3,9 +3,15 @@
 		<script src="crafty-0.4.4.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			window.onload = function() {
+				// Constants
 				var WIDTH = 800;
 				var HEIGHT = 400;
 				var BLOCK_SIZE = 100;
+				
+				// State variables
+				var grid = new Array();
+				var player;
+				
 				Crafty.init(WIDTH, HEIGHT);
 				
 				Crafty.scene('loading', function() {
@@ -19,8 +25,38 @@
 					});
 				});
 				Crafty.scene('main', function() {
+					Crafty.c('CustomControls', {
+						CustomControls: function() {
+							this.bind('KeyDown', function(e) {
+								console.log('Detected keypress: '+e.keyCode);
+								switch(e.keyCode) {
+									case Crafty.keys.LEFT_ARROW:
+										console.log('Left');
+										movePlayer(-1, 0);
+										break;
+									case Crafty.keys.UP_ARROW:
+										console.log('Up');
+										movePlayer(0, -1);
+										break;
+									case Crafty.keys.RIGHT_ARROW:
+										console.log('Right');
+										movePlayer(1, 0);
+										break;
+									case Crafty.keys.DOWN_ARROW:
+										console.log('Down');
+										movePlayer(0, 1);
+										break;
+									default:
+										// Ignore other keypresses.
+								}
+							});
+							
+							return this;
+						}
+					});
+					
 					generateWorld();
-					placePlayer();
+					generatePlayer();
 				});
 				
 				Crafty.sprite(BLOCK_SIZE, 'media/images/sprite.png', {
@@ -31,20 +67,39 @@
 				
 				function generateWorld() {
 					for (var row = 0; row < HEIGHT/BLOCK_SIZE; row++) {
+						grid[row] = new Array();
 						for (var col = 0; col < WIDTH/BLOCK_SIZE; col++) {
-							Crafty.e('2D, DOM, blockWhite')
-							      .attr({'x': col*BLOCK_SIZE,
-							             'y': row*BLOCK_SIZE,
-							             'z': 1});
+							grid[row][col] = Crafty.e('2D, DOM, blockWhite')
+							                       .attr({'x': col*BLOCK_SIZE,
+							                              'y': row*BLOCK_SIZE,
+							                              'z': 1});
 						}
 					}
 				}
 				
-				function placePlayer() {
-					Crafty.e('2D, DOM, blockBlue, LeftControls')
-					      .attr({'x': WIDTH-BLOCK_SIZE,
-					             'y': HEIGHT-BLOCK_SIZE,
-					             'z': 1});
+				function generatePlayer() {
+					player = Crafty.e('2D, DOM, blockBlue, controls, CustomControls')
+					               .attr({'x': WIDTH-BLOCK_SIZE,
+					                      'y': HEIGHT-BLOCK_SIZE,
+					                      'z': 1})
+					               .CustomControls();
+				}
+				
+				function movePlayer(x, y) {
+					// Grey out current block
+					var currentRow = player.y / BLOCK_SIZE;
+					var currentCol = player.x / BLOCK_SIZE;
+					console.log('currentRow: ' + currentRow);
+					console.log('currentCol: ' + currentCol);
+					var currentBlock = grid[currentRow][currentCol];
+					currentBlock.__coord[0] = 100;
+					currentBlock.draw();
+					
+					// Move player
+					player.attr({
+						'x': player.x + (x * BLOCK_SIZE),
+						'y': player.y + (y * BLOCK_SIZE)
+					});
 				}
 				
 				Crafty.scene('loading');
