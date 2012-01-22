@@ -86,6 +86,16 @@
 				}
 				
 				function movePlayer(x, y) {
+					newX = player.x + (x * BLOCK_SIZE);
+					newY = player.y + (y * BLOCK_SIZE);
+					
+					// Check bounds
+					if (newX < 0 || newX+BLOCK_SIZE > WIDTH
+					 || newY < 0 || newY+BLOCK_SIZE > HEIGHT) {
+						console.log('Bounds hit');
+						return;
+					}
+					
 					// Grey out current block
 					var currentRow = player.y / BLOCK_SIZE;
 					var currentCol = player.x / BLOCK_SIZE;
@@ -97,8 +107,8 @@
 					
 					// Move player
 					player.attr({
-						'x': player.x + (x * BLOCK_SIZE),
-						'y': player.y + (y * BLOCK_SIZE)
+						'x': newX,
+						'y': newY
 					});
 				}
 				
