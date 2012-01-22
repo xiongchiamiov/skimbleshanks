@@ -11,6 +11,7 @@
 				// State variables
 				var grid = new Array();
 				var player;
+				var score;
 				
 				Crafty.init(WIDTH, HEIGHT);
 				
@@ -57,6 +58,7 @@
 					
 					generateWorld();
 					generatePlayer();
+					score = 0;
 				});
 				
 				Crafty.sprite(BLOCK_SIZE, 'media/images/sprite.png', {
@@ -110,6 +112,9 @@
 						'x': newX,
 						'y': newY
 					});
+					
+					score++;
+					console.log('Score: ' + score);
 				}
 				
 				Crafty.scene('loading');
