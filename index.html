@@ -12,6 +12,7 @@
 				var grid = new Array();
 				var player;
 				var score;
+				var timerId;
 				
 				Crafty.init(WIDTH, HEIGHT);
 				
@@ -59,9 +60,11 @@
 					generateWorld();
 					generatePlayer();
 					score = 0;
+					timerId = setInterval(pushBlocks, 2000);
 				});
 				Crafty.scene('gameOver', function() {
 					console.log('game over');
+					clearInterval(timerId);
 					Crafty.background('#000');
 					Crafty.e("2D, DOM, Text")
 					      .attr({w: 100, h: 20, x: 150, y: 120})
@@ -132,6 +135,17 @@
 					
 					score++;
 					console.log('Score: ' + score);
+				}
+				
+				function pushBlocks() {
+					console.log('Pushing blocks');
+					// Right to left, top to bottom.
+					for (var col = WIDTH/BLOCK_SIZE; col > 0; col--) {
+						for (var row = 0; row < HEIGHT/BLOCK_SIZE; row++) {
+							grid[row][col] = grid[row][col-1];
+							grid[row][col].draw();
+						}
+					}
 				}
 				
 				Crafty.scene('loading');
