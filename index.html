@@ -7,6 +7,10 @@
 				var WIDTH = 800;
 				var HEIGHT = 400;
 				var BLOCK_SIZE = 100;
+				var columns = WIDTH / BLOCK_SIZE
+				var rows = HEIGHT / BLOCK_SIZE
+				console.log('Columns: ' + columns);
+				console.log('Rows: ' + rows);
 				
 				// State variables
 				var grid = new Array();
@@ -83,9 +87,9 @@
 				});
 				
 				function generateWorld() {
-					for (var row = 0; row < HEIGHT/BLOCK_SIZE; row++) {
+					for (var row = 0; row < rows; row++) {
 						grid[row] = new Array();
-						for (var col = 0; col < WIDTH/BLOCK_SIZE; col++) {
+						for (var col = 0; col < columns; col++) {
 							grid[row][col] = Crafty.e('2D, DOM, blockWhite')
 							                       .attr({'x': col*BLOCK_SIZE,
 							                              'y': row*BLOCK_SIZE,
@@ -137,15 +141,19 @@
 					console.log('Score: ' + score);
 				}
 				
+				/**
+				 * Shift the gameboard to the right and check end-game conditions.
+				 */
 				function pushBlocks() {
 					console.log('Pushing blocks');
 					// Right to left, top to bottom.
-					for (var col = WIDTH/BLOCK_SIZE; col > 0; col--) {
-						for (var row = 0; row < HEIGHT/BLOCK_SIZE; row++) {
+					for (var col = columns; col > 0; col--) {
+						for (var row = 0; row < rows; row++) {
 							grid[row][col] = grid[row][col-1];
 							grid[row][col].draw();
 						}
 					}
+					console.log('Done pushing');
 				}
 				
 				Crafty.scene('loading');
