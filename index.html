@@ -89,7 +89,9 @@
 				function generateWorld() {
 					for (var row = 0; row < rows; row++) {
 						grid[row] = new Array();
-						for (var col = 0; col < columns; col++) {
+						// Build one column off-screen to make our shifting logic
+						// easier.
+						for (var col = -1; col < columns; col++) {
 							grid[row][col] = Crafty.e('2D, DOM, blockWhite')
 							                       .attr({'x': col*BLOCK_SIZE,
 							                              'y': row*BLOCK_SIZE,
@@ -148,13 +150,6 @@
 				 */
 				function pushBlocks() {
 					console.log('Pushing blocks');
-					// Add some blocks off-screen so we can shift them on.
-					for (var row = 0; row < rows; row++) {
-						grid[row][-1] = Crafty.e('2D, DOM, blockWhite')
-						                      .attr({'x': col*BLOCK_SIZE,
-						                             'y': row*BLOCK_SIZE,
-						                             'z': 1});
-					}
 					
 					// Right to left, top to bottom.
 					for (var col = columns-1; col >= 0; col--) {
