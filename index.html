@@ -146,10 +146,25 @@
 				 */
 				function pushBlocks() {
 					console.log('Pushing blocks');
+					// Add some blocks off-screen so we can shift them on.
+					for (var row = 0; row < rows; row++) {
+						grid[row][-1] = Crafty.e('2D, DOM, blockWhite')
+						                      .attr({'x': col*BLOCK_SIZE,
+						                             'y': row*BLOCK_SIZE,
+						                             'z': 1});
+					}
+					
 					// Right to left, top to bottom.
-					for (var col = columns; col > 0; col--) {
+					for (var col = columns-1; col >= 0; col--) {
 						for (var row = 0; row < rows; row++) {
-							grid[row][col] = grid[row][col-1];
+							// Check the blocks that just went off-screen.
+							if (col == columns-1) {
+								if (grid[row][col].__coord[0] == 0) {
+									Crafty.scene('gameOver');
+									return;
+								}
+							}
+							grid[row][col].__coord[0] = grid[row][col-1].__coord[0];
 							grid[row][col].draw();
 						}
 					}
